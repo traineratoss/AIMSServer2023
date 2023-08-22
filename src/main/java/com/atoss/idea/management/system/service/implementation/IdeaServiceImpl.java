@@ -163,6 +163,8 @@ public class IdeaServiceImpl implements IdeaService {
             }
         }
 
+        savedIdea.setRatings(new ArrayList<>());
+
         if (user.getIdeas() == null) {
             user.setIdeas(new ArrayList<>());
         }
@@ -476,6 +478,82 @@ public class IdeaServiceImpl implements IdeaService {
 
         return predicatesList;
     }
+
+    @Override
+    public IdeaResponseDTO addUserRatingToIdea(Long id, Integer ratingNumber, String username) {
+
+        Idea idea = ideaRepository.findById(id).get();
+
+        Boolean alreadyAddedRating = false;
+
+        for (Rating rating : idea.getRatings()) {
+            if (rating.getUser().getUsername().equals(username)) {
+                alreadyAddedRating = true;
+            }
+        }
+
+        if (alreadyAddedRating) {
+            for (Rating rating : idea.getRatings()) {
+                if (rating.getUser().getUsername().equals(username)) {
+                    rating.setRatingNumber(ratingNumber);
+                }
+            }
+
+            IdeaResponseDTO responseDTO = modelMapper.map(idea, IdeaResponseDTO.class);
+
+            return responseDTO;
+
+        } else {
+            Rating rating = new Rating();
+
+            rating.setIdea(idea);
+            rating.setUser(userRepository.findByUsername(username).get());
+            rating.setRatingNumber(ratingNumber);
+
+            if (idea.getRatings() == null) {
+                idea.setRatings(new ArrayList<>());
+            }
+
+            idea.getRatings().add(rating);
+
+            IdeaResponseDTO responseDTO = modelMapper.map(idea, IdeaResponseDTO.class);
+            return responseDTO;
+        }
+    }
+
+    @Override
+    public Float getIdeaRatingAverage(Long id) {
+
+        Idea idea = ideaRepository.findById(id).get();
+
+        Integer sumOfRatings = 0;
+        Integer numberOfRatings = 0;
+
+        for (Rating rating: idea.getRatings()) {
+            sumOfRatings += rating.getRatingNumber();
+            numberOfRatings++;
+        }
+
+        if (numberOfRatings == 0) {
+            return 0.0f;
+        }
+
+        Float averageRating = (float) sumOfRatings / numberOfRatings;
+        return averageRating;
+
+    }
+
+    //    @Override
+    //    public void deleteUserRatingFromIdea(Long id, String username) {
+    //
+    //        Idea idea = ideaRepository.findById(id).get();
+    //
+    //        List<Rating> updatedRatings = idea.getRatings()
+    //                .stream()
+    //                .toList();
+    //
+    //        idea.setRatings(updatedRatings);
+    //    }
 
 
 }

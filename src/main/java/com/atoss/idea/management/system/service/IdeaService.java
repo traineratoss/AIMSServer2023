@@ -125,4 +125,24 @@ public interface IdeaService {
                                  CriteriaBuilder cb,
                                  String columnName);
 
+    /**
+     * Adds a rating to an idea by the current user logged
+     *
+     * @param id the id of the idea
+     * @param ratingNumber the rating the user adds
+     * @param username the username of the user
+     * @return an Idea Response DTO with the newly updated idea
+     */
+    IdeaResponseDTO addUserRatingToIdea(Long id, Integer ratingNumber, String username);
+
+    /**
+     * gets the average rating of an idea
+     *
+     * @param id the id of the idea
+     * @return a float value that represents the average
+     */
+    Float getIdeaRatingAverage(Long id);
+
+    //void deleteUserRatingFromIdea(Long id, String username);
+
 }

@@ -220,4 +220,32 @@ public class IdeaController {
                 text, statusEnums, categories, users, selectedDateFrom, selectedDateTo, sortDirection, username, pageableAsc), HttpStatus.OK);
     }
 
+    /**
+     * adds a rating to an idea from a user
+     *
+     * @param id the id of the idea
+     * @param ratingNumber the rating we wish to add
+     * @param username the username of the user
+     * @return a Response Entity containing an Idea Response DTO and the status
+     */
+    @PostMapping("/rating")
+    @Transactional
+    public ResponseEntity<IdeaResponseDTO> addRatingToIdea(@RequestParam Long id,
+                                                           @RequestParam Integer ratingNumber,
+                                                           @RequestParam String username) {
+        return new ResponseEntity<>(ideaService.addUserRatingToIdea(id, ratingNumber, username), HttpStatus.OK);
+    }
+
+    /**
+     * gets the average rating of an idea
+     *
+     * @param id the id of the idea
+     * @return a float value that represents the average
+     */
+    @GetMapping("/ratingAverage")
+    @Transactional
+    public ResponseEntity<Float> getIdeaRatingAverage(@RequestParam Long id) {
+        return new ResponseEntity<>(ideaService.getIdeaRatingAverage(id), HttpStatus.OK);
+    }
+
 }

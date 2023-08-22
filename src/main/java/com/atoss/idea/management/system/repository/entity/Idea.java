@@ -34,6 +34,10 @@ public class Idea {
     @Column(name = "date")
     private Date creationDate;
 
+    @JsonIgnoreProperties("rating")
+    @OneToMany(mappedBy = "idea", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Rating> ratings;
+
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id", referencedColumnName = "image_id")
     @JsonManagedReference(value = "idea-image")

@@ -67,6 +67,10 @@ public class User {
     @JsonManagedReference(value = "user-comments")
     private List<Comment> comments;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonManagedReference(value = "user-ratings")
+    private List<Rating> ratings;
+
     @Column(name = "is_first_login")
     private Boolean isFirstLogin;
 
