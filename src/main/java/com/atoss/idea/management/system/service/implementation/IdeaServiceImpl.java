@@ -52,6 +52,8 @@ public class IdeaServiceImpl implements IdeaService {
 
     private final CategoryRepository categoryRepository;
 
+    private final RatingRepository ratingRepository;
+
     private final ModelMapper modelMapper;
 
     private final CommentServiceImpl commentServiceImpl;
@@ -63,18 +65,20 @@ public class IdeaServiceImpl implements IdeaService {
      * @param imageRepository    repository for the Image Entity
      * @param userRepository     repository for the User Entity
      * @param categoryRepository repository for the Category Entity
+     * @param ratingRepository repository for the Rating Entity
      * @param modelMapper        responsible for mapping our entities
      * @param commentServiceImpl ======
      */
     public IdeaServiceImpl(IdeaRepository ideaRepository,
                            ImageRepository imageRepository, UserRepository userRepository,
                            CategoryRepository categoryRepository,
-                           ModelMapper modelMapper,
+                           RatingRepository ratingRepository, ModelMapper modelMapper,
                            CommentServiceImpl commentServiceImpl) {
         this.ideaRepository = ideaRepository;
         this.imageRepository = imageRepository;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
+        this.ratingRepository = ratingRepository;
         this.modelMapper = modelMapper;
         this.commentServiceImpl = commentServiceImpl;
     }
@@ -544,17 +548,12 @@ public class IdeaServiceImpl implements IdeaService {
 
     }
 
-    //    @Override
-    //    public void deleteUserRatingFromIdea(Long id, String username) {
-    //
-    //        Idea idea = ideaRepository.findById(id).get();
-    //
-    //        List<Rating> updatedRatings = idea.getRatings()
-    //                .stream()
-    //                .toList();
-    //
-    //        idea.setRatings(updatedRatings);
-    //    }
+    @Override
+    public void deleteUserRatingFromIdea(Long id, String username) {
+        if (ideaRepository.existsById(id)) {
+            ratingRepository.deleteByIdeaIdAndUserUsername(id, username);
+        }
+    }
 
 
 }

@@ -248,4 +248,20 @@ public class IdeaController {
         return new ResponseEntity<>(ideaService.getIdeaRatingAverage(id), HttpStatus.OK);
     }
 
+    /**
+     * deletes user's rating from an idea
+     *
+     * @param id the id of the idea
+     * @param username the user's username
+     * @return a Response Entity containing a text that suggests the fact that we successfully
+     *         deleted the rating
+     */
+    @DeleteMapping("/deleteRating")
+    @Transactional
+    public ResponseEntity<String> deleteRatingById(@RequestParam Long id,
+                                                 @RequestParam String username)  {
+        ideaService.deleteUserRatingFromIdea(id, username);
+        return new ResponseEntity<>("Rating successfully deleted", HttpStatus.OK);
+    }
+
 }

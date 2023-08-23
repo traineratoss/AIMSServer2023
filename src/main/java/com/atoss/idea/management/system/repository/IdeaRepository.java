@@ -75,4 +75,6 @@ public interface IdeaRepository extends JpaRepository<Idea, Long> {
     List<Idea> filterIdeasByDate(@Param("selectedDateFrom") String selectedDateFrom,
                                  @Param("selectedDateTo") String selectedDateTo);
 
+
+
 }

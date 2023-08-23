@@ -143,8 +143,12 @@ public interface IdeaService {
      */
     Float getIdeaRatingAverage(Long id);
 
-    //void deleteUserRatingFromIdea(Long id, String username);
-
-
+    /**
+     * deletes user's rating from an idea
+     *
+     * @param id the id of the idea
+     * @param username the user's username
+     */
+    void deleteUserRatingFromIdea(Long id, String username);
 
 }
