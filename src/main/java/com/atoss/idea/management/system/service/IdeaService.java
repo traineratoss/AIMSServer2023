@@ -95,7 +95,7 @@ public interface IdeaService {
                                            List<Status> status,
                                            List<String> categories,
                                            List<String> user,
-                                           Integer ratingNumber,
+                                           Double ratingNumber,
                                            String selectedDateFrom,
                                            String selectedDateTo,
                                            String sortDirection,

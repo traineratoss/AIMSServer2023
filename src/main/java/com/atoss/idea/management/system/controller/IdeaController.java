@@ -191,7 +191,7 @@ public class IdeaController {
             @RequestParam(required = false) String status,
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String user,
-            @RequestParam(required = false) Integer ratingNumber,
+            @RequestParam(required = false) Double ratingNumber,
             @RequestParam(required = false) String selectedDateFrom,
             @RequestParam(required = false) String selectedDateTo,
             @RequestParam(required = true) int pageNumber,

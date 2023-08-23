@@ -331,7 +331,7 @@ public class IdeaServiceImpl implements IdeaService {
                                         List<Status> statuses,
                                         List<String> categories,
                                         List<String> users,
-                                        Integer ratingNumber,
+                                        Double ratingNumber,
                                         String selectedDateFrom,
                                         String selectedDateTo,
                                         String sortDirection,
@@ -367,7 +367,11 @@ public class IdeaServiceImpl implements IdeaService {
         }
 
         if (ratingNumber != null && ratingNumber > 0) {
-            predicatesList.add(cb.equal(root.join("ratings").get("ratingNumber"), ratingNumber));
+            int roundedRating = (int) Math.round(ratingNumber);
+            double lowerBound = roundedRating;
+            double upperBound = roundedRating + 0.99;
+
+            predicatesList.add(cb.between(root.join("ratings").get("ratingNumber"), lowerBound, upperBound));
         }
 
         if (statuses != null && !statuses.isEmpty()) {
