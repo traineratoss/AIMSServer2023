@@ -80,6 +80,7 @@ public interface IdeaService {
      * @param status  the ideas matching the specified statuses
      * @param categories the ideas matching the specified categories
      * @param user the ideas matching the specified users
+     * @param ratingNumber the ideas with this specific rating
      * @param selectedDateFrom the ideas matching the specified selected date from
      * @param selectedDateTo the ideas matching the specified selected date to
      * @param sortDirection the sorting direction of the pages
@@ -94,6 +95,7 @@ public interface IdeaService {
                                            List<Status> status,
                                            List<String> categories,
                                            List<String> user,
+                                           Integer ratingNumber,
                                            String selectedDateFrom,
                                            String selectedDateTo,
                                            String sortDirection,

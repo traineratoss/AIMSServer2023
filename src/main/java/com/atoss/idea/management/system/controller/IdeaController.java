@@ -173,6 +173,7 @@ public class IdeaController {
      *                 of Categories and filter the ideas matching these
      * @param user a string that will be converted into an array
      *             of Users and filter the ideas matching these
+     * @param ratingNumber the ideas matching the specified rating criteria
      * @param selectedDateFrom the ideas matching the specified selected date from
      * @param selectedDateTo the ideas matching the specified selected date to
      * @param pageSize the size of the page
@@ -190,6 +191,7 @@ public class IdeaController {
             @RequestParam(required = false) String status,
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String user,
+            @RequestParam(required = false) Integer ratingNumber,
             @RequestParam(required = false) String selectedDateFrom,
             @RequestParam(required = false) String selectedDateTo,
             @RequestParam(required = true) int pageNumber,
@@ -217,7 +219,8 @@ public class IdeaController {
         Pageable pageableAsc = PageRequest.of(pageNumber, pageSize);
 
         return new ResponseEntity<>(ideaService.filterIdeasByAll(title,
-                text, statusEnums, categories, users, selectedDateFrom, selectedDateTo, sortDirection, username, pageableAsc), HttpStatus.OK);
+                text, statusEnums, categories, users, ratingNumber, selectedDateFrom, selectedDateTo,
+                sortDirection, username, pageableAsc), HttpStatus.OK);
     }
 
     /**

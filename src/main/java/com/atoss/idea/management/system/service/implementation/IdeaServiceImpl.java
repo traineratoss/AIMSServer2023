@@ -331,6 +331,7 @@ public class IdeaServiceImpl implements IdeaService {
                                         List<Status> statuses,
                                         List<String> categories,
                                         List<String> users,
+                                        Integer ratingNumber,
                                         String selectedDateFrom,
                                         String selectedDateTo,
                                         String sortDirection,
@@ -363,6 +364,10 @@ public class IdeaServiceImpl implements IdeaService {
         if (text != null) {
             String nonCaseSensitiveText = text.toLowerCase();
             predicatesList.add(cb.like(cb.lower(root.get("text")), "%" + nonCaseSensitiveText + "%"));
+        }
+
+        if (ratingNumber != null && ratingNumber > 0) {
+            predicatesList.add(cb.equal(root.join("ratings").get("ratingNumber"), ratingNumber));
         }
 
         if (statuses != null && !statuses.isEmpty()) {
