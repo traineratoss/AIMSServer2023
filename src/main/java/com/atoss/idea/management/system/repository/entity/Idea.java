@@ -36,6 +36,7 @@ public class Idea {
 
     @JsonIgnoreProperties("rating")
     @OneToMany(mappedBy = "idea", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference(value = "idea-ratings")
     private List<Rating> ratings;
 
     @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)

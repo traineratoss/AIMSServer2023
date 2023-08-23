@@ -18,13 +18,13 @@ public class Rating {
     @Column(name = "ratingNumber")
     private Integer ratingNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idea_id", referencedColumnName = "idea_id", nullable = true)
+    @ManyToOne
+    @JoinColumn(name = "idea_id", referencedColumnName = "idea_id")
     @JsonBackReference(value = "idea-ratings")
     private Idea idea;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     @JsonBackReference(value = "user-ratings")
     private User user;
 }

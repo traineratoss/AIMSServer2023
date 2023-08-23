@@ -145,4 +145,6 @@ public interface IdeaService {
 
     //void deleteUserRatingFromIdea(Long id, String username);
 
+
+
 }

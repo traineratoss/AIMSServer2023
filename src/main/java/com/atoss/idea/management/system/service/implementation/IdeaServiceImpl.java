@@ -504,19 +504,20 @@ public class IdeaServiceImpl implements IdeaService {
             return responseDTO;
 
         } else {
+            if (idea.getRatings() == null) {
+                idea.setRatings(new ArrayList<>());
+            }
+
             Rating rating = new Rating();
 
             rating.setIdea(idea);
             rating.setUser(userRepository.findByUsername(username).get());
             rating.setRatingNumber(ratingNumber);
 
-            if (idea.getRatings() == null) {
-                idea.setRatings(new ArrayList<>());
-            }
-
             idea.getRatings().add(rating);
 
             IdeaResponseDTO responseDTO = modelMapper.map(idea, IdeaResponseDTO.class);
+
             return responseDTO;
         }
     }
