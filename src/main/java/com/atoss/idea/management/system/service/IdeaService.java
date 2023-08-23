@@ -135,7 +135,7 @@ public interface IdeaService {
      * @param username the username of the user
      * @return an Idea Response DTO with the newly updated idea
      */
-    IdeaResponseDTO addUserRatingToIdea(Long id, Integer ratingNumber, String username);
+    IdeaResponseDTO addUserRatingToIdea(Long id, Double ratingNumber, String username);
 
     /**
      * gets the average rating of an idea
@@ -143,7 +143,7 @@ public interface IdeaService {
      * @param id the id of the idea
      * @return a float value that represents the average
      */
-    Float getIdeaRatingAverage(Long id);
+    Double getIdeaRatingAverage(Long id);
 
     /**
      * deletes user's rating from an idea

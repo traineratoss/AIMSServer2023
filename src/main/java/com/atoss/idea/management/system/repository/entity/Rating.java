@@ -16,7 +16,7 @@ public class Rating {
     private Long id;
 
     @Column(name = "ratingNumber")
-    private Integer ratingNumber;
+    private Double ratingNumber;
 
     @ManyToOne
     @JoinColumn(name = "idea_id", referencedColumnName = "idea_id")

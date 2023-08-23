@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class RatingDTO {
     private Long ideaId;
-    private Integer ratingNumber;
+    private Double ratingNumber;
     private String userUsername;
 }

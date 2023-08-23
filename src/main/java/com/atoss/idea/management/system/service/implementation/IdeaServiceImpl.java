@@ -489,7 +489,7 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
     @Override
-    public IdeaResponseDTO addUserRatingToIdea(Long id, Integer ratingNumber, String username) {
+    public IdeaResponseDTO addUserRatingToIdea(Long id, Double ratingNumber, String username) {
 
         Idea idea = ideaRepository.findById(id).get();
 
@@ -532,12 +532,12 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
     @Override
-    public Float getIdeaRatingAverage(Long id) {
+    public Double getIdeaRatingAverage(Long id) {
 
         Idea idea = ideaRepository.findById(id).get();
 
-        Integer sumOfRatings = 0;
-        Integer numberOfRatings = 0;
+        Double sumOfRatings = 0D;
+        Double numberOfRatings = 0D;
 
         for (Rating rating: idea.getRatings()) {
             sumOfRatings += rating.getRatingNumber();
@@ -545,10 +545,10 @@ public class IdeaServiceImpl implements IdeaService {
         }
 
         if (numberOfRatings == 0) {
-            return 0.0f;
+            return 0.0D;
         }
 
-        Float averageRating = (float) sumOfRatings / numberOfRatings;
+        Double averageRating = sumOfRatings / numberOfRatings;
         return averageRating;
 
     }

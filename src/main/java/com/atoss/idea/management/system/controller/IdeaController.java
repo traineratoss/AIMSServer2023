@@ -234,7 +234,7 @@ public class IdeaController {
     @PostMapping("/rating")
     @Transactional
     public ResponseEntity<IdeaResponseDTO> addRatingToIdea(@RequestParam Long id,
-                                                           @RequestParam Integer ratingNumber,
+                                                           @RequestParam Double ratingNumber,
                                                            @RequestParam String username) {
         return new ResponseEntity<>(ideaService.addUserRatingToIdea(id, ratingNumber, username), HttpStatus.OK);
     }
@@ -247,7 +247,7 @@ public class IdeaController {
      */
     @GetMapping("/ratingAverage")
     @Transactional
-    public ResponseEntity<Float> getIdeaRatingAverage(@RequestParam Long id) {
+    public ResponseEntity<Double> getIdeaRatingAverage(@RequestParam Long id) {
         return new ResponseEntity<>(ideaService.getIdeaRatingAverage(id), HttpStatus.OK);
     }
 
