@@ -10,11 +10,7 @@ import com.atoss.idea.management.system.service.IdeaService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Order;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -364,15 +360,6 @@ public class IdeaServiceImpl implements IdeaService {
         if (text != null) {
             String nonCaseSensitiveText = text.toLowerCase();
             predicatesList.add(cb.like(cb.lower(root.get("text")), "%" + nonCaseSensitiveText + "%"));
-        }
-
-        if (ratingNumber != null && ratingNumber > 0) {
-            int roundedRating = (int) Math.round(ratingNumber);
-            double lowerBound = roundedRating;
-            double upperBound = roundedRating + 0.99;
-
-            predicatesList.add(cb.between(root.join("ratings").get("ratingNumber"), lowerBound, upperBound));
-        }
 
         if (statuses != null && !statuses.isEmpty()) {
             predicatesList.add(root.get("status").in(statuses));
@@ -384,6 +371,20 @@ public class IdeaServiceImpl implements IdeaService {
 
         if (categories != null && !categories.isEmpty()) {
             predicatesList.add(root.join("categoryList").get("text").in(categories));
+        }
+
+        if (ratingNumber != null && ratingNumber > 0) {
+            Subquery<Double> subquery = criteriaQuery.subquery(Double.class);
+            Root<Idea> subqueryRoot = subquery.correlate(root);
+
+            Expression<Double> avgRating = cb.avg(subqueryRoot.join("ratings").get("ratingNumber"));
+            subquery.select(avgRating);
+
+            subquery.where(cb.equal(subqueryRoot, root));
+
+            subquery = subquery.having(cb.greaterThanOrEqualTo(avgRating, ratingNumber));
+
+            predicatesList.add(cb.exists(subquery));
         }
 
         predicatesList.addAll(filterByDate(selectedDateFrom, selectedDateTo, root, cb, "creationDate"));
@@ -499,6 +500,16 @@ public class IdeaServiceImpl implements IdeaService {
 
         Boolean alreadyAddedRating = false;
 
+        if (idea.getUser().getUsername().equals(username)) {
+            throw new FieldValidationException("Can't add rating to own idea.");
+        }
+
+        if (ratingNumber < 1D || ratingNumber > 5D) {
+            throw new FieldValidationException("Rating out of bounds.");
+        }
+
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User doesn't exist."));
+
         for (Rating rating : idea.getRatings()) {
             if (rating.getUser().getUsername().equals(username)) {
                 alreadyAddedRating = true;
@@ -524,7 +535,7 @@ public class IdeaServiceImpl implements IdeaService {
             Rating rating = new Rating();
 
             rating.setIdea(idea);
-            rating.setUser(userRepository.findByUsername(username).get());
+            rating.setUser(user);
             rating.setRatingNumber(ratingNumber);
 
             idea.getRatings().add(rating);
