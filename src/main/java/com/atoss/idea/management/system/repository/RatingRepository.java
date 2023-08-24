@@ -57,6 +57,13 @@ public interface RatingRepository extends JpaRepository<Idea, Long> {
     List<Double> topRatedIdeasAverages();
 
 
+    /**
+     * gets the top rated ideas id's
+     *
+     * @param selectedDateFrom date from which we select
+     * @param selectedDateTo data up to selection
+     * @return a list containing idea-id's of the top rated ideas between given dates
+     */
     @Query(value = "SELECT i.idea_id"
             +
             " FROM idea i"
@@ -73,6 +80,14 @@ public interface RatingRepository extends JpaRepository<Idea, Long> {
     List<Long> topRatedIdeasByDate(@Param("selectedDateFrom") String selectedDateFrom,
                                    @Param("selectedDateTo") String selectedDateTo);
 
+
+    /**
+     * gets the top rated ideas averages
+     *
+     * @param selectedDateFrom date from which we select
+     * @param selectedDateTo data up to selection
+     * @return a list containing idea averages of the top rated ideas between given dates
+     */
     @Query(value = "SELECT AVG(r.rating_number) AS avg_rating"
             +
             " FROM idea i"
@@ -86,6 +101,6 @@ public interface RatingRepository extends JpaRepository<Idea, Long> {
             " ORDER BY avg_rating DESC"
             +
             " LIMIT 5", nativeQuery = true)
-    List<Long> topRatedIdeasAveragesByDate(@Param("selectedDateFrom") String selectedDateFrom,
+    List<Double> topRatedIdeasAveragesByDate(@Param("selectedDateFrom") String selectedDateFrom,
                                              @Param("selectedDateTo") String selectedDateTo);
 }

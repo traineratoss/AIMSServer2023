@@ -148,7 +148,7 @@ public class StatisticsServiceImpl implements StatisticsService {
      * do statistics on them and to send them to be displayed
      *
      * @param topRatedIdeas list of idea id
-     * @return list of most commented ideas
+     * @return list of top rated ideas
      */
     public List<IdeaResponseDTO> getTopRatedIdeas(List<Long> topRatedIdeas) {
 
@@ -173,6 +173,40 @@ public class StatisticsServiceImpl implements StatisticsService {
         }
 
         return topRated;
+    }
+
+    /**
+     * we use this function to retrieve the top-rated ideas by date in order to
+     * do statistics on them and to send them to be displayed
+     *
+     * @param topRatedIdeas list of idea id
+     * @param selectedDateFrom the starting date
+     * @param selectedDateTo the ending date
+     * @return list of top rated ideas
+     */
+    public List<IdeaResponseDTO> getTopRatedIdeasByDate(List<Long> topRatedIdeas, String selectedDateFrom, String selectedDateTo) {
+
+
+        List<IdeaResponseDTO> topRatedByDate = new ArrayList<>();
+        List<Double> topRatedAverages = ratingRepository.topRatedIdeasAveragesByDate(selectedDateFrom, selectedDateTo);
+
+        int count = 0;
+
+        for (Long id:topRatedIdeas) {
+            Idea idea = ideaRepository.findById(id).get();
+
+            IdeaResponseDTO ideaResponseDTO = modelMapper.map(idea, IdeaResponseDTO.class);
+            ideaResponseDTO.setUsername(idea.getUser().getUsername());
+            ideaResponseDTO.setTitle(idea.getTitle());
+            ideaResponseDTO.setText(idea.getText());
+            ideaResponseDTO.setRatingAverage(topRatedAverages.get(count));
+            ideaResponseDTO.setElapsedTime(commentService.getElapsedTime(idea.getCreationDate()));
+            count++;
+
+            topRatedByDate.add(ideaResponseDTO);
+        }
+
+        return topRatedByDate;
     }
 
     @Override
@@ -284,8 +318,8 @@ public class StatisticsServiceImpl implements StatisticsService {
         List<IdeaResponseDTO> mostCommentedIdeas = getMostCommentedIdeas(
                 commentRepository.mostCommentedIdeasIdsByDate(selectedDateFrom, selectedDateTo));
 
-        List<IdeaResponseDTO> topRatedIdeas = getTopRatedIdeas(
-                ratingRepository.topRatedIdeasAveragesByDate(selectedDateFrom, selectedDateTo));
+        List<IdeaResponseDTO> topRatedIdeas = getTopRatedIdeasByDate(
+                ratingRepository.topRatedIdeasByDate(selectedDateFrom, selectedDateTo), selectedDateFrom, selectedDateTo);
 
         filteredStatisticsDTO.setImplP(implPercentage);
         filteredStatisticsDTO.setOpenP(openPercentage);
@@ -297,7 +331,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         filteredStatisticsDTO.setTotalNrOfComments(noOfComments);
         filteredStatisticsDTO.setTotalNrOfReplies(noOfReplies);
         filteredStatisticsDTO.setMostCommentedIdeas(mostCommentedIdeas);
-        filteredStatisticsDTO.setTopRatedIdeas();
+        filteredStatisticsDTO.setTopRatedIdeas(topRatedIdeas);
 
         return filteredStatisticsDTO;
     }
