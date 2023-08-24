@@ -55,4 +55,37 @@ public interface RatingRepository extends JpaRepository<Idea, Long> {
             +
             " LIMIT 5", nativeQuery = true)
     List<Double> topRatedIdeasAverages();
+
+
+    @Query(value = "SELECT i.idea_id"
+            +
+            " FROM idea i"
+            +
+            " JOIN rating r ON r.idea_id = i.idea_id"
+            +
+            " WHERE i.date BETWEEN cast(:selectedDateFrom AS timestamp) AND cast(:selectedDateTo AS timestamp)"
+            +
+            " GROUP BY i.idea_id"
+            +
+            " ORDER BY AVG(r.rating_number) DESC"
+            +
+            " LIMIT 5", nativeQuery = true)
+    List<Long> topRatedIdeasByDate(@Param("selectedDateFrom") String selectedDateFrom,
+                                   @Param("selectedDateTo") String selectedDateTo);
+
+    @Query(value = "SELECT AVG(r.rating_number) AS avg_rating"
+            +
+            " FROM idea i"
+            +
+            " JOIN rating r ON r.idea_id = i.idea_id"
+            +
+            " WHERE i.date BETWEEN cast(:selectedDateFrom AS timestamp) AND cast(:selectedDateTo AS timestamp)"
+            +
+            " GROUP BY i.idea_id, i.date"
+            +
+            " ORDER BY avg_rating DESC"
+            +
+            " LIMIT 5", nativeQuery = true)
+    List<Long> topRatedIdeasAveragesByDate(@Param("selectedDateFrom") String selectedDateFrom,
+                                             @Param("selectedDateTo") String selectedDateTo);
 }

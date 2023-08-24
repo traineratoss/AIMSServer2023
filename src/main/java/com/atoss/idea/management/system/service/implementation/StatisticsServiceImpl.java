@@ -166,6 +166,7 @@ public class StatisticsServiceImpl implements StatisticsService {
             ideaResponseDTO.setTitle(idea.getTitle());
             ideaResponseDTO.setText(idea.getText());
             ideaResponseDTO.setRatingAverage(topRatedAverages.get(count));
+            ideaResponseDTO.setElapsedTime(commentService.getElapsedTime(idea.getCreationDate()));
             count++;
 
             topRated.add(ideaResponseDTO);
@@ -283,6 +284,9 @@ public class StatisticsServiceImpl implements StatisticsService {
         List<IdeaResponseDTO> mostCommentedIdeas = getMostCommentedIdeas(
                 commentRepository.mostCommentedIdeasIdsByDate(selectedDateFrom, selectedDateTo));
 
+        List<IdeaResponseDTO> topRatedIdeas = getTopRatedIdeas(
+                ratingRepository.topRatedIdeasAveragesByDate(selectedDateFrom, selectedDateTo));
+
         filteredStatisticsDTO.setImplP(implPercentage);
         filteredStatisticsDTO.setOpenP(openPercentage);
         filteredStatisticsDTO.setDraftP(draftPercentage);
@@ -293,6 +297,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         filteredStatisticsDTO.setTotalNrOfComments(noOfComments);
         filteredStatisticsDTO.setTotalNrOfReplies(noOfReplies);
         filteredStatisticsDTO.setMostCommentedIdeas(mostCommentedIdeas);
+        filteredStatisticsDTO.setTopRatedIdeas();
 
         return filteredStatisticsDTO;
     }
