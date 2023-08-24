@@ -34,4 +34,6 @@ public class StatisticsDTO {
 
     private List<IdeaResponseDTO> mostCommentedIdeas;
 
+    private List<IdeaResponseDTO> topRatedIdeas;
+
 }

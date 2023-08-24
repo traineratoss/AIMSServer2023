@@ -97,8 +97,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             " LIMIT 5", nativeQuery = true)
     List<Long> mostCommentedIdeas();
 
-
-
     /**
      * gets the most replied comments up to a limit , not used atm
      * Usage : in the future if there is a need to see an idea with many replies

@@ -4,6 +4,7 @@ package com.atoss.idea.management.system.service.implementation;
 import com.atoss.idea.management.system.repository.CommentRepository;
 import com.atoss.idea.management.system.repository.IdeaRepository;
 import com.atoss.idea.management.system.repository.UserRepository;
+import com.atoss.idea.management.system.repository.RatingRepository;
 import com.atoss.idea.management.system.repository.dto.IdeaResponseDTO;
 import com.atoss.idea.management.system.repository.dto.StatisticsDTO;
 import com.atoss.idea.management.system.repository.entity.Comment;
@@ -44,27 +45,32 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     private final CommentRepository commentRepository;
 
+    private final RatingRepository ratingRepository;
+
 
     /**
      * Constructor
      *
-     * @param modelMapper ==
-     * @param ideaService ==
-     * @param ideaRepository ==
-     * @param commentService ==
-     * @param userRepository ==
+     * @param modelMapper       ==
+     * @param ideaService       ==
+     * @param ideaRepository    ==
+     * @param commentService    ==
+     * @param userRepository    ==
      * @param commentRepository ==
+     * @param ratingRepository ==
      */
     public StatisticsServiceImpl(ModelMapper modelMapper,
                                  IdeaService ideaService,
                                  IdeaRepository ideaRepository,
-                                 CommentServiceImpl commentService, UserRepository userRepository, CommentRepository commentRepository) {
+                                 CommentServiceImpl commentService, UserRepository userRepository, CommentRepository commentRepository,
+                                 RatingRepository ratingRepository) {
         this.modelMapper = modelMapper;
         this.ideaService = ideaService;
         this.ideaRepository = ideaRepository;
         this.commentService = commentService;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
+        this.ratingRepository = ratingRepository;
     }
 
     @Override
@@ -137,6 +143,32 @@ public class StatisticsServiceImpl implements StatisticsService {
         return sortedIdeas;
     }
 
+    /**
+     * we use this function to retrieve the top-rated ideas in order to
+     * do statistics on them and to send them to be displayed
+     *
+     * @param topRatedIdeas list of idea id
+     * @return list of most commented ideas
+     */
+    public List<IdeaResponseDTO> getTopRatedIdeas(List<Long> topRatedIdeas) {
+
+
+        List<IdeaResponseDTO> topRated = new ArrayList<>();
+
+        for (Long id:topRatedIdeas) {
+            Idea idea = ideaRepository.findById(id).get();
+
+            IdeaResponseDTO ideaResponseDTO = modelMapper.map(idea, IdeaResponseDTO.class);
+            ideaResponseDTO.setUsername(idea.getUser().getUsername());
+            ideaResponseDTO.setTitle(idea.getTitle());
+            ideaResponseDTO.setText(idea.getText());
+
+            topRated.add(ideaResponseDTO);
+        }
+
+        return topRated;
+    }
+
     @Override
     public StatisticsDTO getGeneralStatistics() {
 
@@ -171,7 +203,9 @@ public class StatisticsServiceImpl implements StatisticsService {
         draftPercentage = draftPercentage + diff;
 
         List<IdeaResponseDTO> mostCommentedIdeas = getMostCommentedIdeas(commentRepository.mostCommentedIdeas());
+        List<IdeaResponseDTO> topRatedIdeas = getTopRatedIdeas(ratingRepository.topRatedIdeas());
 
+        statisticsDTO.setTopRatedIdeas(topRatedIdeas);
         statisticsDTO.setMostCommentedIdeas(mostCommentedIdeas);
         statisticsDTO.setNrOfUsers(nrOfUsers);
         statisticsDTO.setNrOfIdeas(nrOfIdeas);

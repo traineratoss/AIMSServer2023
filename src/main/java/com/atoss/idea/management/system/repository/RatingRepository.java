@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface RatingRepository extends JpaRepository<Idea, Long> {
 
@@ -21,4 +23,20 @@ public interface RatingRepository extends JpaRepository<Idea, Long> {
             + "WHERE r.user = (SELECT u FROM User u WHERE u.username = :username) "
             + "AND r.idea = (SELECT i FROM Idea i WHERE i.id = :ideaId)")
     void deleteByIdeaIdAndUserUsername(@Param("ideaId") Long ideaId, @Param("username") String username);
+
+    /**
+     * gets the top rated ideas id's since the beginning of the app
+     *
+     * @return a list containing idea-id's of the most commented ideas
+     */
+    @Query(value = "SELECT idea_id"
+            +
+            " FROM rating"
+            +
+            " GROUP BY idea_id"
+            +
+            " ORDER BY AVG(rating_number) DESC"
+            +
+            " LIMIT 5", nativeQuery = true)
+    List<Long> topRatedIdeas();
 }
