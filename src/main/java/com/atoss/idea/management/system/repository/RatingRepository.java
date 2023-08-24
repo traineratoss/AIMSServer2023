@@ -39,4 +39,20 @@ public interface RatingRepository extends JpaRepository<Idea, Long> {
             +
             " LIMIT 5", nativeQuery = true)
     List<Long> topRatedIdeas();
+
+    /**
+     * gets the top rated ideas averages since the beginning of the app
+     *
+     * @return a list containing all the averages
+     */
+    @Query(value = "SELECT AVG(rating_number)"
+            +
+            " FROM rating"
+            +
+            " GROUP BY idea_id"
+            +
+            " ORDER BY AVG(rating_number) DESC"
+            +
+            " LIMIT 5", nativeQuery = true)
+    List<Double> topRatedIdeasAverages();
 }

@@ -32,4 +32,6 @@ public class IdeaResponseDTO {
     private String elapsedTime;
 
     private List<RatingDTO> ratings;
+
+    private Double ratingAverage;
 }

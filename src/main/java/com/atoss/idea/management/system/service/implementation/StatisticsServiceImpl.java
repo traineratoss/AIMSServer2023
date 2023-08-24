@@ -154,6 +154,9 @@ public class StatisticsServiceImpl implements StatisticsService {
 
 
         List<IdeaResponseDTO> topRated = new ArrayList<>();
+        List<Double> topRatedAverages = ratingRepository.topRatedIdeasAverages();
+
+        int count = 0;
 
         for (Long id:topRatedIdeas) {
             Idea idea = ideaRepository.findById(id).get();
@@ -162,6 +165,8 @@ public class StatisticsServiceImpl implements StatisticsService {
             ideaResponseDTO.setUsername(idea.getUser().getUsername());
             ideaResponseDTO.setTitle(idea.getTitle());
             ideaResponseDTO.setText(idea.getText());
+            ideaResponseDTO.setRatingAverage(topRatedAverages.get(count));
+            count++;
 
             topRated.add(ideaResponseDTO);
         }
