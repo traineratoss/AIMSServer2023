@@ -360,6 +360,7 @@ public class IdeaServiceImpl implements IdeaService {
         if (text != null) {
             String nonCaseSensitiveText = text.toLowerCase();
             predicatesList.add(cb.like(cb.lower(root.get("text")), "%" + nonCaseSensitiveText + "%"));
+        }
 
         if (statuses != null && !statuses.isEmpty()) {
             predicatesList.add(root.get("status").in(statuses));
