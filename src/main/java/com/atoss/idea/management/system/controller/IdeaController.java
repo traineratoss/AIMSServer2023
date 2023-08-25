@@ -261,10 +261,10 @@ public class IdeaController {
      */
     @DeleteMapping("/deleteRating")
     @Transactional
-    public ResponseEntity<String> deleteRatingById(@RequestParam Long id,
+    public ResponseEntity<Object> deleteRatingById(@RequestParam Long id,
                                                  @RequestParam String username)  {
         ideaService.deleteUserRatingFromIdea(id, username);
-        return new ResponseEntity<>("Rating successfully deleted", HttpStatus.OK);
+        return new ResponseEntity<>( HttpStatus.OK);
     }
 
 }
